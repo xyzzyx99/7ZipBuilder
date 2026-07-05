@@ -64,7 +64,14 @@ function Update-7ZipBuildOptimization {
         $updatedLines += 'LFLAGS = -LTCG -OPT:REF -OPT:ICF'
     }
 
-    Set-Content -Path $buildMak -Value $updatedLines -Encoding UTF8
+    # Archives downloaded/extracted by the builder can preserve read-only attributes.
+    # Clear them before patching Build.mak on GitHub Actions runners.
+    $buildMakItem = Get-Item -LiteralPath $buildMak
+    if (($buildMakItem.Attributes -band [System.IO.FileAttributes]::ReadOnly) -ne 0) {
+        $buildMakItem.Attributes = $buildMakItem.Attributes -band (-bnot [System.IO.FileAttributes]::ReadOnly)
+    }
+
+    Set-Content -Path $buildMak -Value $updatedLines -Encoding UTF8 -Force
 
     Write-Output "Patched 7-Zip compiler/linker optimization flags in $buildMak"
     Select-String -Path $buildMak -Pattern 'CFLAGS_O1|CFLAGS_O2|LFLAGS|arch:AVX2|LTCG' | ForEach-Object {
