@@ -32,6 +32,18 @@
 4. 编译完成后在 **Artifacts** 中下载 **7-Zip Installer**。
 5. 检查生成的安装包 **7z2409.exe** 是否可用。
 
+
+### 编译优化
+
+此修改版会在编译前自动修补下载得到的 7-Zip `CPP\Build.mak`。编译会启用 MSVC 最大速度优化和 AVX2：
+
+```text
+-O2 -Ob3 -Oi -Ot -Oy -GL -Gy -GF -Gw -arch:AVX2
+-LTCG -OPT:REF -OPT:ICF
+```
+
+生成的二进制文件需要支持 AVX2 的 CPU。
+
 ## 自定义
 
 > 更详细的使用方法见 [更现代的 7-Zip](https://github.com/YukiIsait/MoreModern7Zip)。

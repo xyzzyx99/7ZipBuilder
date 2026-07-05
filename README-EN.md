@@ -32,6 +32,18 @@ An automatic compilation script for [7-Zip](https://www.7-zip.org/), used to cus
 4. After the compilation is complete, download the **7-Zip Installer** from the **Artifacts** section.
 5. Check if the generated installer **7z2409.exe** is functional.
 
+
+### Build optimization
+
+This modified version patches the downloaded 7-Zip `CPP\Build.mak` before compilation. The build uses MSVC maximum-speed optimization with AVX2 enabled:
+
+```text
+-O2 -Ob3 -Oi -Ot -Oy -GL -Gy -GF -Gw -arch:AVX2
+-LTCG -OPT:REF -OPT:ICF
+```
+
+The generated binaries require a CPU with AVX2 support.
+
 ## Customization
 
 > For more detailed usage, see the [More Modern 7-Zip](https://github.com/YukiIsait/MoreModern7Zip).
